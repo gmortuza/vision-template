@@ -45,7 +45,10 @@ def train_model(params):
     logger.info("Saving the final model and it's result")
     # If it is a hyper parameter search we won't save the model
     if not params.is_hyper_parameter_searching:
+        # If there exists a model already we will remove that
         final_model_path = os.path.join(params.output_dir, "final_model")
+        if os.path.isdir(final_model_path):
+            os.rmdir(final_model_path)
         os.makedirs(final_model_path)
         # This will save entire model
         model.save(final_model_path)

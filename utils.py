@@ -44,8 +44,8 @@ class Params:
         self.dataset_dir = os.path.join(self.base_dir, self.dataset_dir)
         self.output_dir = os.path.join(self.base_dir, self.output_dir)
 
-        self.checkpoint_dir = os.path.join(self.output_dir, self.checkpoint_dir)
-        self.log_dir = os.path.join(self.output_dir, self.log_dir)
+        self.checkpoint_dir = os.path.join(self.output_dir, "checkpoint")
+        self.log_dir = os.path.join(self.output_dir, "logs")
 
     def save(self, json_path):
         """Saves parameters to json file"""

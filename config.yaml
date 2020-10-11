@@ -1,19 +1,29 @@
 ---
-dataset_dir: inputs/dataset  # This is a comment
-label_from: directory
+dataset_dir: inputs/dataset  # dataset location
+label_from: directory # other options "file, dataframe"
+# use build in keras flow_from_*. This doesn't provide much flexibility. And this is pretty slow
 data_preparation: custom
-data_set_cache: memory
+# Dataset is cached in memory/ disk+memory
+# Most of the time in a epoch wasted on reading the file from disk.
+# if the data is in the cache then each epoch will be much faster
+# If the dataset is bigger than your memory then use disk
+data_set_cache: memory   # "memory", "disk"
+# Directory where all the model outputs will be saved
 output_dir: outputs
-log_dir: logs
-checkpoint_dir: checkpoint
-log_level: info
-log_to: console
-validation_rate: .3
-input_shape: [64, 64, 3]
-num_output_class: 6
-callbacks:
+# How much log information we want
+log_level: info # "info", "debug", "warning", "error"
+log_to: console # "console", "file"
+# Percentage of dataset that will be used for validation purpose
+validation_rate: .3  # float value
+# Shape of the input image
+input_shape: [64, 64, 3]  # first two element is image size and last one is channel
+# Number of output class to predict
+num_output_class: 6 # int
+# All the callbacks for our training
+callbacks:  # tensorboard, checkpoint, reduce_lr_plateau
 - tensorboard
 - checkpoint
+# Values to search in the region. For now it will use a grid search.
 hparam_tuning:
   learning_rate:
   - .1
@@ -35,6 +45,7 @@ hparam_tuning:
   batch_size:
   - 16
   - 32
+# Hyper parameter that will be used for training purpose
 hparam:
   activation: relu
   learning_rate: .001

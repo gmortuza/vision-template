@@ -22,7 +22,7 @@ def get_data_keras(params):
         train_generator = tf.keras.preprocessing.image_dataset_from_directory(
             train_dir,
             image_size=params.image_size,
-            batch_size=32,
+            batch_size=params.hparam["batch_size"],
             subset="training",
             validation_split=params.validation_rate,
             seed=1234  # reproducibility
@@ -30,7 +30,7 @@ def get_data_keras(params):
         validation_generator = tf.keras.preprocessing.image_dataset_from_directory(
             train_dir,
             image_size=params.image_size,
-            batch_size=32,
+            batch_size=params.hparam["batch_size"],
             subset="validation",
             validation_split=params.validation_rate,
             seed=1234

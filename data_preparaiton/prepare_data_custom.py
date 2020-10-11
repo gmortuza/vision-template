@@ -87,12 +87,18 @@ class PrepareData:
         return img, label
 
     def _configure_for_performance(self, ds):
+        # If the dataset is too big then it
         if self.params.data_set_cache == "memory":
             ds = ds.cache()
         else:
             ds = ds.cache("./tfcache")
-        ds = ds.shuffle(buffer_size=1000)
+        # There will always be this amount of data in the buffer
+        # For perfect shuffling, set the buffer size equal to the full size of the dataset.
+        ds = ds.shuffle(buffer_size=1000, seed=1234)
+        ds = ds.repeat(3)
         ds = ds.batch(self.params.hparam["batch_size"])
+        # This will make sure few of the data(preferably at least one batch) is ready before
+        # AUTOTUNE will dynamically calcualate about how much element will be prefetched
         ds = ds.prefetch(buffer_size=AUTOTUNE)
         return ds
 

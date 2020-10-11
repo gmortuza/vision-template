@@ -1,5 +1,5 @@
 import os
-import json
+import yaml
 import logging
 import tensorflow as tf
 
@@ -8,21 +8,21 @@ class Params:
     """Class that loads hyper parameters from a json file.
     Example:
     ```
-    params = Params(json_path)
+    params = Params(config_file_path)
     print(params.learning_rate)
     params.learning_rate = 0.5  # change the value of learning_rate in params
     ```
     """
 
-    def __init__(self, json_path):
-        self.update(json_path)
-        self._fix_datatype()
+    def __init__(self, config_file_path):
+        self.update(config_file_path)
+        self._additional_parameter()
 
         # Initially it will be false
         # In the hyper parameter searching file it will be set to True
         self.is_hyper_parameter_searching = False
         # This file is in the root directory of the project.
-        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+
         # Delete .DS_Store file from all the directory
         # so that tensorflow data pipeline won't have to deal with that
         command = "find " + self.base_dir + " -name '*.DS_Store' -type f -delete"
@@ -33,30 +33,28 @@ class Params:
         self.verbose = 1 if self.log_level == 'info' else 0
         self.logger.info("Finish reading the configuration file")
 
-    def _fix_datatype(self):
-        self.input_shape = eval(self.input_shape)
+    def _additional_parameter(self):
         *self.image_size, _ = tuple(self.input_shape)
         *_, self.num_channel = self.input_shape
-        self.validation_rate = float(self.validation_rate)
-        self.num_output_class = int(self.num_output_class)
-        self.hparam["dropout"] = float(self.hparam["dropout"])
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
 
     def _make_absolute_directory(self):
         # prepend this base directory with other parameter so that we won't get any error for the path
         # As those directory will be accessed from different file. which are in different location
         self.dataset_dir = os.path.join(self.base_dir, self.dataset_dir)
-        self.checkpoint_dir = os.path.join(self.base_dir, self.checkpoint_dir)
-        self.log_dir = os.path.join(self.base_dir, self.log_dir)
+        self.output_dir = os.path.join(self.base_dir, self.output_dir)
+
+        self.checkpoint_dir = os.path.join(self.output_dir, self.checkpoint_dir)
+        self.log_dir = os.path.join(self.output_dir, self.log_dir)
 
     def save(self, json_path):
         """Saves parameters to json file"""
         with open(json_path, 'w') as f:
-            json.dump(self.__dict__, f, indent=4)
+            yaml.dump(self.__dict__, f, indent=4)
 
-    def update(self, json_path):
-        """Loads parameters from json file"""
-        with open(json_path) as f:
-            params = json.load(f)
+    def update(self, config_file_path):
+        with open(config_file_path) as f:
+            params = yaml.load(f, Loader=yaml.FullLoader)
             self.__dict__.update(params)
 
     @property
@@ -97,40 +95,3 @@ class Params:
         logger.addHandler(handler)
         return logger
 
-
-def set_logger(log_path):
-    """Sets the logger to log info in terminal and file `log_path`.
-    In general, it is useful to have a logger so that every output to the terminal is saved
-    in a permanent file. Here we save it to `model_dir/train.log`.
-    Example:
-    ```
-    logging.info("Starting training...")
-    ```
-    Args:
-        log_path: (string) where to log
-    """
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
-    if not logger.handlers:
-        # Logging to a file
-        file_handler = logging.FileHandler(log_path)
-        file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))
-        logger.addHandler(file_handler)
-
-        # Logging to console
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(logging.Formatter('%(message)s'))
-        logger.addHandler(stream_handler)
-
-
-def save_dict_to_json(d, json_path):
-    """Saves dict of floats in json file
-    Args:
-        d: (dict) of float-castable values (np.float, int, float, etc.)
-        json_path: (string) path to json file
-    """
-    with open(json_path, 'w') as f:
-        # We need to convert the values to float for json (it doesn't accept np.array, np.float, )
-        d = {k: float(v) for k, v in d.items()}
-        json.dump(d, f, indent=4)

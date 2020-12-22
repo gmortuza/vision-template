@@ -9,7 +9,7 @@ docker build -t vision .
 ```
 **Run project**
 ```docker
-docker run -it vision --gpus all -v $(pwd)/inputs:/home/project/inputs -v $(pwd)/outputs:/home/projects/outputs vision python train.py/search_hyper_parameter.py
+docker run -it vision --gpus all -v $(pwd)/inputs:/home/project/inputs -v $(pwd)/outputs:/home/projects/outputs vision python train.py/search_hparam.py
 ```
 The inputs folder can be pretty big as it will contains the dataset and pretrained model. So we don't copy this
 folder's content into docker container instead we mount this folder in a docker container.  

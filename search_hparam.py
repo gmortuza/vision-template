@@ -2,7 +2,7 @@ import os
 import tensorflow as tf
 from tensorboard.plugins.hparams import api as hp
 from sklearn.model_selection import ParameterGrid
-from utils import Params
+from read_parameter import Params
 from train import train_model
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"

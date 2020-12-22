@@ -1,5 +1,5 @@
 import json
-from utils import Params
+from read_parameter import Params
 from models.model import get_model
 from data_preparaiton.prepare_data_keras import get_data_keras
 from data_preparaiton.prepare_data_custom import get_data_custom

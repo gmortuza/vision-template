@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 import os
 import pathlib
-from utils import Params
+from read_parameter import Params
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 

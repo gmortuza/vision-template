@@ -9,7 +9,7 @@ data_preparation: custom
 # If the dataset is bigger than your memory then use disk
 data_set_cache: memory   # "memory", "disk"
 # Directory where all the model outputs will be saved
-output_dir: outputs
+output_dir: output
 # How much log information we want
 log_level: info # "info", "debug", "warning", "error"
 log_to: console # "console", "file"
@@ -23,6 +23,10 @@ num_output_class: 6 # int
 callbacks:  # tensorboard, checkpoint, reduce_lr_plateau
 - tensorboard
 - checkpoint
+- custom
+transfer_learning:  # Find link of all pretrained model here https://tfhub.dev/
+  hub_link: "https://tfhub.dev/google/imagenet/resnet_v1_101/classification/4"
+  re_train: False
 # Values to search in the region. For now it will use a grid search.
 hparam_tuning:
   learning_rate:
@@ -51,6 +55,6 @@ hparam:
   learning_rate: .001
   dropout: .3
   optimizer: adam
-  epochs: 2
+  epochs: 3
   loss: sparse_categorical_crossentropy
   batch_size: 32

@@ -1,5 +1,5 @@
 import os
-from utils import Params
+from read_parameter import Params
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 

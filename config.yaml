@@ -21,12 +21,12 @@ input_shape: [64, 64, 3]  # first two element is image size and last one is chan
 num_output_class: 6 # int
 # All the callbacks for our training
 callbacks:  # tensorboard, checkpoint, reduce_lr_plateau
-- tensorboard
+#- tensorboard
 - checkpoint
-- custom
+#- custom
 transfer_learning:  # Find link of all pretrained model here https://tfhub.dev/
   hub_link: "https://tfhub.dev/google/imagenet/resnet_v1_101/classification/4"
-  re_train: False
+  do_fine_tuning: False
 # Values to search in the region. For now it will use a grid search.
 hparam_tuning:
   learning_rate:
